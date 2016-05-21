@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript">
+    $(function() {
+
+        const chat = io.connect('http://localhost:3000/chat');
+        const room = '<%=room%>';
+        const nickname = '<%=nickname%>';
+
+        chat.on('connect', function() {
+            chat.emit('joinroom', {room: room, nickname: nickname});
+        });
+
+        $('form').submit(function() {
+            chat.emit('sendmessage', {
+                room: room,
+                from: nickname,
+                message: $('#m').val()
+            });
+            $('#m').val('');
+            return false;
+        });
+        chat.on('receivemessage', function(data) {
+            console.log('message arrived via receive message');
+            $('#messages').append($('<li>').text(data.from + ":" + data.message));
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form action="" class="chat" method="post">
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+    </form>
+</body>
+
+</html>

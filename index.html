@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript">
+    $(function() {
+
+        String.prototype.trim = function() {
+            return $.trim(this);
+        };
+
+        $('form').submit(function() {
+
+            const room = $('#room').val().trim();
+            const nickname = $('#nickname').val().trim();
+
+            if (room === '' || nickname === '') {
+                return false;
+            }
+            return true;
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <form action="/chat" method="post">
+        Room: <input id="room" name="room" autocomplete="off" />
+        <br>
+        Nickname:  <input id="nickname" name="nickname" autocomplete="off" />
+        <br>
+        <button>Send</button>
+    </form>
+</body>
+
+</html>
