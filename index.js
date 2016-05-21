@@ -14,17 +14,18 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
   extended: true
 }));
 
-io.of('/chat')
-  .on('connection', function(socket) {
+const chat = io.of('/chats');
+
+chat.on('connection', function(socket) {
 
     socket.on('joinroom', function(info) {
       console.log('new user entered in room ' + info.room);
       socket.join(info.room);
     });
 
-    socket.on('chatmessage', function(data) {
+    socket.on('sendmessage', function(data) {
       console.log('chat message: ', data);
-      io.sockets.in(data.room).emit('receivemessage', data);
+      chat.in(data.room).emit('receivemessage', data);
     });
   })
   .clients(function(error, clients) {
